@@ -1,10 +1,9 @@
-# UNO MQTT DSC Keybus interface #
+# UNO MQTT Presence & Temperature/Humidity sensor #
 
 Arduino sketch that interface HC-SR04 ping sensor and AM2301 temperature.humidity sensor.
 
 This code is to be used with an ATMEGA328p Uno board and a ENC28J60 Ethernet PHY device.
 A couple of standard libraries are included in project as they were modified for this project.
-
 
 
 ### Specifics ###
