@@ -59,6 +59,8 @@ IPAddress const MQTTBrokerIP        (192, 168, 1, 1);
 #define DHTInvalidValue 'N'
 #define TempReadLoopPeriod_ms         (60000)
 #define DHTStringLen (7)
+#define DHTHumHyst_tenth  (5)
+#define DHTTempHyst_tenth (5)
 
 // Network properties
 uint8_t const mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x03 };
@@ -79,8 +81,8 @@ static uint32_t sonarPingTimer;
 static uint32_t presenceDetectTimer;
 static uint32_t tempReadTimer;
 static unsigned long previous;
-static char previousTemp[DHTStringLen];
-static char previousHumidity[DHTStringLen];
+static int16_t previousTempTrim;
+static int16_t previousHumidityTrim;
 static boolean currentPresenceDetect;
 static uint8_t previousPresenceValue;
 static boolean runPresenceDetectTimeout;
@@ -119,7 +121,7 @@ void setup()
   tempReadTimer = 0;
   presenceDetectTimer = 0;
   previous = 0;
-  previousTemp[0] = previousHumidity[0] = '\0';
+  previousTempTrim = previousHumidityTrim = INT16_MAX;
   currentPresenceDetect = true;
   runPresenceDetectTimeout = true;
   previousPresenceValue = MAX_DISTANCE;
@@ -233,48 +235,49 @@ void loop()
       float const temp = DHT.temperature;
       float const hum = DHT.humidity;
 
-      char format[DHTStringLen + 1];
-      // Minus len to left align
-      dtostrf(temp, -DHTStringLen, 2, format);
-      for(uint8_t i = 0; i < DHTStringLen; i++)
+      int16_t const trimTemp = (temp * 10.0);
+      bool const tempHyst = abs(trimTemp - previousTempTrim) >= DHTTempHyst_tenth;
+      if(tempHyst)
       {
-        if(format[i] == ' ')
+        char format[DHTStringLen + 1];
+        // Minus len to left align
+        dtostrf(temp, -DHTStringLen, 2, format);
+        for(uint8_t i = 0; i < DHTStringLen; i++)
         {
-          format[i] = '\0';
-          break;
+          if(format[i] == ' ')
+          {
+            format[i] = '\0';
+            break;
+          }
         }
-      }
-      bool lenDiff = strlen(previousTemp) != strlen(format);
-      bool stringDiff = 0 != strncmp(previousTemp, format, DHTStringLen);
-      if(lenDiff || stringDiff)
-      {
         if(DHTInvalidValue != format[0])
         {
           if(publishMQTTMessage(MQTTPubTemperature, format, MQTTRetain))
           {
-            strncpy(previousTemp, format, DHTStringLen);
+            previousTempTrim = trimTemp;
           }
         }
       }
 
-      dtostrf(hum, -DHTStringLen, 2, format);
-      for(uint8_t i = 0; i < DHTStringLen; i++)
+      int16_t const humTrim = (hum * 10.0);
+      bool const humHyst = abs(humTrim - previousHumidityTrim) >= DHTHumHyst_tenth;
+      if(humHyst)
       {
-        if(format[i] == ' ')
+        char format[DHTStringLen + 1];
+        dtostrf(hum, -DHTStringLen, 2, format);
+        for(uint8_t i = 0; i < DHTStringLen; i++)
         {
-          format[i] = '\0';
-          break;
+          if(format[i] == ' ')
+          {
+            format[i] = '\0';
+            break;
+          }
         }
-      }
-      lenDiff = strlen(previousHumidity) != strlen(format);
-      stringDiff = 0 != strncmp(previousHumidity, format, DHTStringLen);
-      if(lenDiff || stringDiff)
-      {
         if(DHTInvalidValue != format[0])
         {
           if(publishMQTTMessage(MQTTPubHumidity, format, MQTTRetain))
           {
-            strncpy(previousHumidity, format, DHTStringLen);
+            previousHumidityTrim = humTrim;
           }
         }
       }
