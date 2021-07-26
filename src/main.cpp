@@ -60,7 +60,7 @@ IPAddress const MQTTBrokerIP        (192, 168, 1, 1);
 #define TempReadLoopPeriod_ms         (60000)
 #define DHTStringLen (7)
 #define DHTHumHyst_tenth  (5)
-#define DHTTempHyst_tenth (5)
+#define DHTTempHyst_tenth (2)
 
 // Network properties
 uint8_t const mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x03 };
@@ -95,8 +95,6 @@ static bool publishMQTTMessage (char const * const sMQTTSubscription, char const
 
 void setup() 
 {
-  Serial.print(F("Atelier Multisensor MQTT interface "));
-  Serial.println(F(VERSION));
 
   pinMode(DHTGNDPin, OUTPUT);
   pinMode(DHTVCCPin, OUTPUT);
@@ -108,7 +106,9 @@ void setup()
 
   Serial.begin(UARTBAUD);
 
-  DHT.setDisableIRQ(true);
+  Serial.print(F("Atelier Multisensor MQTT interface "));
+  Serial.println(F(VERSION));
+  DHT.setDisableIRQ(false);
 
   // Initializes ethernet with DHCP
   Serial.println(F("Init Ethernet."));
@@ -127,6 +127,7 @@ void setup()
   previousPresenceValue = MAX_DISTANCE;
   digitalWrite(PRESENCE_LED_PIN_SINK, !currentPresenceDetect);
   Serial.println(F("Setup Complete."));
+  delay(500);
 }
 
 void loop() 
