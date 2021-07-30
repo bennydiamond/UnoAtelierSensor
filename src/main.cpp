@@ -317,7 +317,6 @@ static boolean mqttHandle (void)
       {
         mqttActionTimer = ConnectBrokerRetryInterval_ms;
         Serial.println(F("MQTT connection failed."));
-        Ethernet.begin(mac, ip, MQTTBrokerIP, gateway, subnet);
       } 
       else 
       {
