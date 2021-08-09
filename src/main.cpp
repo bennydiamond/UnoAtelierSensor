@@ -17,11 +17,11 @@
 // Sonar (ping) properties
 #define TRIGGER_PIN  19  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     18  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 120 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 110 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define MIN_DISTANCE 2 // Minimum distance ping sensor can realisticly measure
 #define MEDIAN_SAMPLE_COUNT (13)
 #define PING_DIFF_VALUE_THRESHOLD (20)
-#define SonarPingLoopPeriod_ms        (40)
+#define SonarPingLoopPeriod_ms        (60)
 #define SonarPingSleepPeriod_ms       (5000)
 #define SonarPingPresenceTimeout_ms   (10000)
 //#define PING_DEBUG_PRINT
@@ -144,6 +144,10 @@ void loop()
       unsigned int const ping = sonar.ping();
       //interrupts();
       uint8_t const distance = sonar.convert_cm(ping);
+#ifdef PING_DEBUG_PRINT
+      Serial.print("Dist: ");
+      Serial.println(distance);
+#endif
       samples.add(distance);
 
       bool presenceChanged = false;
