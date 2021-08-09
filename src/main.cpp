@@ -17,11 +17,11 @@
 // Sonar (ping) properties
 #define TRIGGER_PIN  19  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     18  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 110 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 120 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define MIN_DISTANCE 2 // Minimum distance ping sensor can realisticly measure
 #define MEDIAN_SAMPLE_COUNT (13)
 #define PING_DIFF_VALUE_THRESHOLD (20)
-#define SonarPingLoopPeriod_ms        (60)
+#define SonarPingLoopPeriod_ms        (50)
 #define SonarPingSleepPeriod_ms       (5000)
 #define SonarPingPresenceTimeout_ms   (10000)
 //#define PING_DEBUG_PRINT
@@ -157,24 +157,27 @@ void loop()
       {
         // TODO remove return to ping value 0 on Presence timeout.
         uint8_t const medianValue = samples.getMedian();
-        uint8_t const differentValue = abs(previousPresenceValue - medianValue) > PING_DIFF_VALUE_THRESHOLD;
-        if(false == runPresenceDetectTimeout) // Normal behavior
+        if(medianValue)
         {
+          bool const differentValue = (abs(previousPresenceValue - medianValue) > PING_DIFF_VALUE_THRESHOLD);
+          if(false == runPresenceDetectTimeout) // Normal behavior
+          {
 #ifdef PING_DEBUG_PRINT
-          Serial.println("normal");
+            Serial.println("normal");
 #endif
-          pingValue = medianValue;
-          previousPresenceValue = medianValue;
-          runPresenceDetectTimeout = true;
-        }
-        else if(differentValue) // Stuck at same value for too long but it has now changed.
-        {
+            pingValue = medianValue;
+            previousPresenceValue = medianValue;
+            runPresenceDetectTimeout = true;
+          }
+          else if(differentValue) // Stuck at same value for too long but it has now changed.
+          {
 #ifdef PING_DEBUG_PRINT
-          Serial.println("Diff value");
+            Serial.println("Diff value");
 #endif
-          pingValue = previousPresenceValue = medianValue;
-          presenceDetectTimer = 0;
-          runPresenceDetectTimeout = true;
+            pingValue = previousPresenceValue = medianValue;
+            presenceDetectTimer = 0;
+            runPresenceDetectTimeout = true;
+          }
         }
       }
       else
