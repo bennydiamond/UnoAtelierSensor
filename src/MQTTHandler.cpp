@@ -1,8 +1,8 @@
 #include "MQTTHandler.h"
 
 // Network properties
-uint8_t const mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x04 };
-IPAddress const ip(192, 168, 1, 17);
+uint8_t const mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x03 };
+IPAddress const ip(192, 168, 1, 16);
 IPAddress const gateway(192, 168, 0, 1);
 IPAddress const subnet(255,255,254,0);
 
