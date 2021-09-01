@@ -8,8 +8,8 @@ ExecTimer::ExecTimer(SonarPingLoopPeriod_ms),
 sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE),
 samples(MEDIAN_SAMPLE_COUNT),
 currentPresenceDetect(true),
-runPresenceDetectTimeout(true),
 previousPresenceValue(MAX_DISTANCE),
+runPresenceDetectTimeout(true),
 presenceDetectTimer(0)
 {
     pinMode(PRESENCE_LED_PIN_SINK, OUTPUT);

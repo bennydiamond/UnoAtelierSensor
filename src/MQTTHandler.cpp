@@ -34,7 +34,9 @@ bool MQTTHandler::execute (bool newMs)
     // Connect to MQTTHandler broker, retry periodically
     if(newMillisecond(newMs))
     {
-        if(false == pubSubClient.connect(MQTTClientName, MQTTBrokerUser, MQTTBrokerPass, MQTTPubAvailable, MQTTWillQos, MQTTWillRetain, MQTTUnavailablePayload)) 
+        char topic[TopicPublishMaxLength];
+        snprintf(topic, TopicPublishMaxLength, MQTTTopicPrefix MQTTTopicSet "/%s", MQTTPubAvailable);
+        if(false == pubSubClient.connect(MQTTClientName, MQTTBrokerUser, MQTTBrokerPass, topic, MQTTWillQos, MQTTWillRetain, MQTTUnavailablePayload)) 
         {
             Serial.println(F("MQTT connect fail"));
             setPeriod(ConnectBrokerRetryInterval_ms);
