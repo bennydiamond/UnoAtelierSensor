@@ -1,6 +1,6 @@
 #include "ExecTimer.h"
 #include "secret.h"
-#include <Ethernet.h>
+#include "UIPEthernet.h"
 #include <PubSubClient.h>
 
 #pragma once
