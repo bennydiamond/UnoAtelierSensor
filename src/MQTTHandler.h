@@ -52,7 +52,4 @@ private:
     static auto const SubTopicMaxLength = 12;
     static auto const TopicPublishMaxLength = strlen(MQTTTopicPrefix) + strlen(MQTTTopicSet) + strlen("/") + SubTopicMaxLength;
     static void mqttCallback (char* topic, byte* payload, unsigned int length);
-
-    EthernetClient ethClient;
-    PubSubClient pubSubClient;
 };

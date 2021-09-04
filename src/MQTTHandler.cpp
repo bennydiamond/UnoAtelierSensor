@@ -8,10 +8,11 @@ IPAddress const subnet(255,255,254,0);
 
 IPublish * MQTTHandler::publisher;
 
+EthernetClient ethClient;
+PubSubClient pubSubClient(MQTTBrokerIP, MQTTBrokerPort, ethClient);
+
 MQTTHandler::MQTTHandler (void) :
-ExecTimer::ExecTimer(ConnectBrokerRetryInterval_ms),
-ethClient(),
-pubSubClient(MQTTBrokerIP, MQTTBrokerPort, ethClient)
+ExecTimer::ExecTimer(ConnectBrokerRetryInterval_ms)
 {
   publisher = this;
 }
