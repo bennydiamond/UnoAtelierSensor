@@ -34,24 +34,27 @@ void PresenceHandler::execute(bool newMs)
         {
             // TODO remove return to ping value 0 on Presence timeout.
             uint8_t const medianValue = samples.getMedian();
-            uint8_t const differentValue = abs(previousPresenceValue - medianValue) > PING_DIFF_VALUE_THRESHOLD;
-            if(false == runPresenceDetectTimeout) // Normal behavior
+            if(medianValue)
             {
+                uint8_t const differentValue = abs(previousPresenceValue - medianValue) > PING_DIFF_VALUE_THRESHOLD;
+                if(false == runPresenceDetectTimeout) // Normal behavior
+                {
 #ifdef PING_DEBUG_PRINT
-                Serial.println("normal");
+                    Serial.println("normal");
 #endif
-                pingValue = medianValue;
-                previousPresenceValue = medianValue;
-                runPresenceDetectTimeout = true;
-            }
-            else if(differentValue) // Stuck at same value for too long but it has now changed.
-            {
+                    pingValue = medianValue;
+                    previousPresenceValue = medianValue;
+                    runPresenceDetectTimeout = true;
+                }
+                else if(differentValue) // Stuck at same value for too long but it has now changed.
+                {
 #ifdef PING_DEBUG_PRINT
-                Serial.println("Diff value");
+                    Serial.println("Diff value");
 #endif
-                pingValue = previousPresenceValue = medianValue;
-                presenceDetectTimer = 0;
-                runPresenceDetectTimeout = true;
+                    pingValue = previousPresenceValue = medianValue;
+                    presenceDetectTimer = 0;
+                    runPresenceDetectTimeout = true;
+                }
             }
         }
         else
