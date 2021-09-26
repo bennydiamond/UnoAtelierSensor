@@ -57,7 +57,7 @@ bool MQTTHandler::execute (bool newMs)
 bool MQTTHandler::publish (char const * const topicSuffix, char const * const sMQTTHandlerData, bool retain)
 {
   char topic[TopicPublishMaxLength];
-  snprintf(topic, TopicPublishMaxLength, MQTTTopicPrefix MQTTTopicSet "/%s", topicSuffix);
+  snprintf(topic, TopicPublishMaxLength, MQTTTopicPrefix MQTTTopicGet "/%s", topicSuffix);
   bool result = pubSubClient.publish(topic, sMQTTHandlerData, retain); 
 
   // Debug info
