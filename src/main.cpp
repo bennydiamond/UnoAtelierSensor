@@ -9,7 +9,7 @@
 
 /* Pin in use
    D10, D11, D12, D13 Ethernet adapter (SPI)
-   D21, D20 Sonar (trig, echo)
+   D2, D3 PIR (VCC, output)
    D7, D8, D9 DHT (GND, VCC, output)
 */
 
@@ -30,6 +30,9 @@ void setup()
   pinMode(DHTVCCPin, OUTPUT);
   digitalWrite(DHTGNDPin, LOW);
   digitalWrite(DHTVCCPin, HIGH);
+
+  pinMode(PIRVCCPin, OUTPUT);
+  digitalWrite(PIRVCCPin, HIGH);
 
   Serial.begin(UARTBAUD);
 
