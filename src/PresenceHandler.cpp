@@ -11,7 +11,7 @@ PresenceHandler::PresenceHandler (void)
 
 void PresenceHandler::execute(bool newMs)
 {
-    boolean const currentPIR = digitalRead(PIROutputPin) ? true : false;
+    bool const currentPIR = digitalRead(PIROutputPin) ? true : false;
 
     if(currentPIR != currentPresenceDetect)
     {
