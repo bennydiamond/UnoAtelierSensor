@@ -1,5 +1,7 @@
 # UNO MQTT Presence & Temperature/Humidity sensor #
 
+# This project is now archived. I moved home and no longer require this thing.
+
 Arduino sketch that interface HC-SR04 ping sensor and AM2301 temperature.humidity sensor.
 
 This code is to be used with an ATMEGA328p Uno board and a ENC28J60 Ethernet PHY device.
